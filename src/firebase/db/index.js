@@ -4,13 +4,10 @@ import firebase from 'firebase'
 var db = firebase.firestore();
 
 // Add a second document with a generated ID.
-db.collection("users")
-  .add({
-    first: "Alan",
-    middle: "Mathison",
-    last: "Turing",
-    born: 1912,
-  })
+
+function addToDb(table, data)
+db.collection(table)
+  .add(data)
   .then(function (docRef) {
     console.log("Document written with ID: ", docRef.id);
   })
@@ -18,10 +15,12 @@ db.collection("users")
     console.error("Error adding document: ", error);
   });
 
-db.collection("users")
-  .get()
-  .then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-      console.log(`${doc.id} => ${doc.data()}`);
+function getDBData(table) {
+  db.collection(table)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        console.log(`${doc.id} => ${doc.data()}`);
+      });
     });
-  });
+}
