@@ -2,8 +2,10 @@ import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { Form, Button, Card } from "react-bootstrap";
 
-export default function ForgotPassword() {
+export default function SignUpForm() {
   const emailRef = useRef();
+  const passwordRef = useRef();
+  const PasswordConfirmRef = useRef();
 
   return (
     <>
@@ -15,8 +17,16 @@ export default function ForgotPassword() {
               <Form.Label>Email</Form.Label>
               <Form.Control type="email" ref={emailRef} required />
             </Form.Group>
+            <Form.Group id="email">
+              <Form.Label>Password</Form.Label>
+              <Form.Control type="password" ref={passwordRef} required />
+            </Form.Group>
+            <Form.Group id="email-confirm">
+              <Form.Label>Password Confirmation</Form.Label>
+              <Form.Control type="password" ref={PasswordConfirmRef} required />
+            </Form.Group>
             <Button className="w-100" type="Submit">
-              Send password link
+              Sign Up
             </Button>
           </Form>
         </Card.Body>
