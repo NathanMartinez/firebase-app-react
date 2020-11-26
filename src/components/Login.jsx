@@ -1,17 +1,38 @@
-import { useRef } from "react";
-import { Link } from "react-router-dom";
-import { Form, Button, Card } from "react-bootstrap";
+import { useRef, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+import { Form, Button, Card, Alert } from "react-bootstrap";
+import { useAuth } from "../context/AuthContext";
 
-export default function Login() {
+export default function SignUpForm() {
   const emailRef = useRef();
   const passwordRef = useRef();
+  const { login, currentUser } = useAuth();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const history = useHistory();
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    try {
+      setError("");
+      setLoading(true);
+      await login(emailRef.current.value, passwordRef.current.value);
+      history.push("/");
+    } catch (error) {
+      setError("Failed to log in");
+      console.log(error);
+    }
+    setLoading(false);
+  }
 
   return (
     <>
       <Card>
         <Card.Body>
           <h2 className="text-center mb-4">Log In</h2>
-          <Form>
+          {error && <Alert variant="danger">{error}</Alert>}
+          {currentUser && `${currentUser.email} is logged in`}
+          <Form onSubmit={handleSubmit}>
             <Form.Group id="email">
               <Form.Label>Email</Form.Label>
               <Form.Control type="email" ref={emailRef} required />
@@ -20,15 +41,17 @@ export default function Login() {
               <Form.Label>Password</Form.Label>
               <Form.Control type="password" ref={passwordRef} required />
             </Form.Group>
-            <Button className="w-100" type="Submit">
+            <Button disabled={loading} className="w-100" type="Submit">
               Log In
             </Button>
+            <div className="w-100 text-center mt-3">
+              <Link to="forgot-password">Forgot Password?</Link>
+            </div>
           </Form>
         </Card.Body>
       </Card>
-      <div className="d-flex flex-column w-100 text-center mt-2">
-        <Link to="/signup">Don't have an account? Sign Up</Link>
-        <Link to="/forgot-password">Forgot Password</Link>
+      <div className="w-100 text-center mt-2">
+        Need an account? <Link to="/signup">Sign Up</Link>
       </div>
     </>
   );
